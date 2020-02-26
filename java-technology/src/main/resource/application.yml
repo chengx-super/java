@@ -1,0 +1,80 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  http:
+    encoding:
+      force: true
+      charset: utf-8
+      enabled: true
+  #以下是jdbc连接池配置
+  profiles:
+    active: dev
+  datasource:
+    username: OneopsUser
+    password: Oneops1@#Db
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.1.30.188:3306/metrontest?characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    hikari:
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      max-pool-size: 50
+      min-idle: 5
+      connection-test-query: select 1
+
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      #ddl-auto: update
+      naming:
+        #implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        #physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        # 通过 @Column(name = "dbColumn") 指定数据库字段名
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: 10.1.20.141:9300
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: embedded
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MetronDevScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: qrtz_
+            isClustered: false
+            clusterCheckinInterval: 10000
+            useProperties: false
+            misfireThreshold: 12000
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 20
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
+esAddress: 10.1.20.141:9200
+
+XMLRpc:
+  url: http://10.1.20.143:9001/RPC2
+  username: user
+  password: 123
+
+logging:
+  level:
+    root: error
+    org.apache.metron.rest.oneops: debug
+
+fileStore:
+  basePath: D:\\FileStore
